@@ -1,20 +1,31 @@
 (setq mac-command-modifier 'control)
+(setq load-path(cons"~/.emacs.d/lisp" load-path))
 
-(global-unset-key "\C-q")
+(set-language-environment 'Japanese)
+(set-language-environment  'utf-8)
+(prefer-coding-system 'utf-8)
+
+(package-initialize)
+(require 'package)
+(setq package-archives
+      '(("gnu" . "http://elpa.gnu.org/packages/")
+        ("melpa" . "http://melpa.org/packages/")
+        ("org" . "http://orgmode.org/elpa/")))
+
 (global-set-key "\C-q" 'Control-X-prefix)
-(global-unset-key "\C-j")
 (global-set-key "\C-j" 'mode-specific-command-prefix)
 
 (global-set-key "\C-q\C-o" 'save-buffer)
 (global-set-key "\C-q\C-j" 'save-buffers-kill-emacs)
 (global-set-key "\C-q\C-a" 'write-file)
 (global-set-key "\C-l" 'set-mark-command)
-(global-set-key "\C-t" 'kill-line)
+(global-set-key "\C-t" 'term)
 (global-set-key "\C-z" 'kill-region)
 (global-set-key "\C-u" 'forward-char)
 (global-set-key "\C-x" 'backward-char)
 (global-set-key "\C-qx" 'switch-to-buffer)
 (global-set-key "\C-q\C-u" 'find-file)
+(global-set-key "\C-r" 'toggle-frame-maximized)
 
 (global-set-key "\M-u" 'forward-word)
 (global-set-key "\M-x" 'backward-word)
@@ -23,17 +34,48 @@
 (global-set-key "\C-j\C-l" 'comment-region)
 (global-set-key "\C-j\C-r" 'uncomment-region)
 
+;; Color
+(if window-system (progn
+    (set-background-color "Black")
+    (set-foreground-color "LightGray")
+    (set-cursor-color "Gray")
+    (set-frame-parameter nil 'alpha 85) ;透明度
+    ))
+
 ;; ¥の代わりにバックスラッシュを入力する
 (define-key global-map [?¥] [?\\])
+
+;; 対応する括弧をハイライトする
+(show-paren-mode t)
+(setq show-paren-style 'mixed)
+
+;; 括弧自動補完
+(require 'smartparens)
+(smartparens-global-mode t)
+(setq-default sp-highlight-pair-overlay nil)  ;ハイライト機能削除
+
+;; (load-theme 'underwater t)
+
+;; オートコンプリートの有効化
+(require 'company)
+(global-company-mode) ; 全バッファで有効にする
+(setq company-idle-delay 0) ; デフォルト0.5
+(setq company-minimum-prefix-length 2) ; デフォルト4
+(setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る
+;; (define-key company-active-map (kbd "M-n") nil)
+;; (define-key company-active-map (kbd "M-p") nil)
+;; (define-key company-active-map (kbd "C-n") 'company-select-next)
+;; (define-key company-active-map (kbd "C-p") 'company-select-previous)
+;; (define-key company-active-map (kbd "C-h") nil)
 
 ;; フレームの設定
 (setq default-frame-alist
       (append (list
                ;; サイズ・位置
                '(width . 120)  ; 横幅(文字数)
-               '(height . 60) ; 高さ(行数)
-               '(top . 120)    ; フレーム左上角 y 座標
-               '(left . 1275)   ; フレーム左上角 x 座標
+               '(height . 59) ; 高さ(行数)
+               '(top . 72)    ; フレーム左上角 y 座標
+               '(left . 1900)   ; フレーム左上角 x 座標
                )
               default-frame-alist))
 
@@ -54,6 +96,10 @@
 
 ;; 行の先頭でC-kを一回押すだけで行全体を消去する
 (setq kill-whole-line t)
+
+;; オートセーブしない＆バックアップファイルを作らない
+(setq auto-save-default nil)
+(setq make-backup-files nil)
 
 ;; yes-or-no を y-or-n で応えるようにする．
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -83,27 +129,138 @@
 (set-scroll-bar-mode 'right)
 
 ;; フォント設定
-(when (and (>= emacs-major-version 24) (not (null window-system)))
-  (let* ((font-family "Menlo")
-         (font-size 12)
-         (font-height (* font-size 13))
-         (jp-font-family "ヒラギノ角ゴ ProN"))
-    (set-face-attribute 'default nil :family font-family :height font-height)
-    (let ((name (frame-parameter nil 'font))
-          (jp-font-spec (font-spec :family jp-font-family))
-          (jp-characters '(katakana-jisx0201
-                           cp932-2-byte
-                           japanese-jisx0212
-                           japanese-jisx0213-2
-                           japanese-jisx0213.2004-1))
-          (font-spec (font-spec :family font-family))
-          (characters '((?\u00A0 . ?\u00FF)    ; Latin-1
-                        (?\u0100 . ?\u017F)    ; Latin Extended-A
-                        (?\u0180 . ?\u024F)    ; Latin Extended-B
-                        (?\u0250 . ?\u02AF)    ; IPA Extensions
-                        (?\u0370 . ?\u03FF)))) ; Greek and Coptic
-      (dolist (jp-character jp-characters)
-        (set-fontset-font name jp-character jp-font-spec))
-      (dolist (character characters)
-        (set-fontset-font name character font-spec))
-      (add-to-list 'face-font-rescale-alist (cons jp-font-family 1.2)))))
+(set-face-attribute 'default nil
+                    :family "Ricty Diminished Discord"
+                    :height 200)
+(set-fontset-font (frame-parameter nil 'font)
+                  'japanese-jisx0208
+                  (cons "Ricty Diminished Discord" "iso10646-1"))
+(set-fontset-font (frame-parameter nil 'font)
+                  'japanese-jisx0212
+                  (cons "Ricty Diminished Discord" "iso10646-1"))
+(set-fontset-font (frame-parameter nil 'font)
+                  'katakana-jisx0201
+                  (cons "Ricty Diminished Discord" "iso10646-1"))
+
+;; (if window-system
+;;     (progn
+;;       (let* ((size 18)
+;;              (asciifont "Ricty Ascii") ; ASCII fonts
+;;              (jpfont "ヒラギノ角ゴ ProN") ; Japanese fonts
+;;              (h (* size 10))
+;;              (fontspec (font-spec :family asciifont))
+;;              (jp-fontspec (font-spec :family jpfont)))
+;;         (set-face-attribute 'default nil :family asciifont :height h)
+;;         (set-fontset-font nil 'japanese-jisx0213.2004-1 jp-fontspec)
+;;         (set-fontset-font nil 'japanese-jisx0213-2 jp-fontspec)
+;;         (set-fontset-font nil 'katakana-jisx0201 jp-fontspec)
+;;         (set-fontset-font nil '(#x0080 . #x024F) fontspec)
+;;         (set-fontset-font nil '(#x0370 . #x03FF) fontspec))))
+
+
+(autoload 'cycle-buffer "cycle-buffer" "Cycle forward." t)
+(autoload 'cycle-buffer-backward "cycle-buffer" "Cycle backward." t)
+(autoload 'cycle-buffer-permissive "cycle-buffer" "Cycle forward allowing *buffers*." t)
+(autoload 'cycle-buffer-backward-permissive "cycle-buffer" "Cycle backward allowing *buffers*." t)
+(autoload 'cycle-buffer-toggle-interesting "cycle-buffer" "Toggle if this buffer will be considered." t)
+(global-set-key "\M-p"        'cycle-buffer-backward)
+(global-set-key "\M-k"       'cycle-buffer)
+
+(require 'yaml-mode)
+(add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
+
+;; (autoload 'markdown-preview-mode "markdown-preview-mode.el" t)
+;; (custom-set-variables
+;;  '(package-selected-packages
+;;    '(flycheck vue-mode mmm-jinja2 mmm-mode markdown-mode+ markdown-preview-mode uuidgen web-server websocket)))
+;; (custom-set-faces
+;;  )
+(autoload 'markdown-preview-mode "markdown-preview-mode.el" t)
+(setq markdown-preview-stylesheets (list "github.css"))
+
+
+(add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
+
+;; vue-mode時、node_modulesのパスを登録
+(add-hook 'vue-mode-hook 'add-node-modules-path)
+
+;; eslintによるflycheck
+(require 'flycheck)
+(flycheck-add-mode 'javascript-eslint 'vue-mode)
+(flycheck-add-mode 'javascript-eslint 'vue-html-mode)
+(flycheck-add-mode 'javascript-eslint 'css-mode)
+
+;; tern-mode有効
+(add-hook 'vue-mode-hook 'tern-mode)
+
+;; vue-modeでflycheck有効にしたら、
+;; 保存時にfixする
+(add-hook 'vue-mode-hook
+          (lambda ()
+            (add-hook 'flycheck-mode-hook
+                      (lambda()
+                        (add-hook 'after-save-hook #'eslint-fix)))))
+
+(provide 'vue-config)
+
+
+;;;========================================
+;;; JavaScript系の設定
+;;;========================================
+
+;; 拡張子jsのファイルを開いたときjs-modeに
+(add-to-list 'auto-mode-alist '("\\.js$" . js-mode))
+
+;; ========================================
+;;  補完の設定
+;;  company-tern
+;; ========================================
+
+;; depth絡みの不具合への対策
+;; override
+(defun company-tern-depth (candidate)
+  "Return depth attribute for CANDIDATE. 'nil' entries are treated as 0."
+  (let ((depth (get-text-property 0 'depth candidate)))
+    (if (eq depth nil) 0 depth)))
+
+(defun js-company-tern-hook ()
+  (when (locate-library "tern")
+    ;; .tern-port を作らない
+    (setq tern-command '("tern" "--no-port-file"))
+    (tern-mode t)))
+
+(add-hook 'js-mode-hook 'js-company-tern-hook)
+
+;; ========================================
+;; jsdocコメント
+;; C-ciにバインド
+;; ========================================
+
+(defun js-jsdoc-hook ()
+  (local-set-key "\C-ci" 'js-doc-insert-function-doc)
+  (local-set-key "@" 'js-doc-insert-tag))
+
+(add-hook 'js-mode-hook 'js-jsdoc-hook)
+
+;; ========================================
+;; node_modulesのパスを通す
+;; ========================================
+(add-hook 'js-mode-hook 'add-node-modules-path)
+
+(provide 'js-config)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(multi-term underwater-theme twilight-theme ubuntu-theme monokai-theme company vue-mode uuidgen smartparens mmm-jinja2 markdown-preview-mode markdown-mode+ flycheck)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+(require 'term+)
+;; (require 'xterm-256color)
