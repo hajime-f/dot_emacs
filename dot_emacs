@@ -19,13 +19,15 @@
 (global-set-key "\C-q\C-j" 'save-buffers-kill-emacs)
 (global-set-key "\C-q\C-a" 'write-file)
 (global-set-key "\C-l" 'set-mark-command)
-(global-set-key "\C-t" 'term)
+(global-set-key "\C-t" 'kill-line)
+(global-set-key "\C-k" 'term)
 (global-set-key "\C-z" 'kill-region)
 (global-set-key "\C-u" 'forward-char)
 (global-set-key "\C-x" 'backward-char)
 (global-set-key "\C-qx" 'switch-to-buffer)
 (global-set-key "\C-q\C-u" 'find-file)
-(global-set-key "\C-r" 'toggle-frame-maximized)
+(global-set-key "\C-r" 'isearch-backward)
+(global-set-key "\C-p" 'toggle-frame-maximized)
 
 (global-set-key "\M-u" 'forward-word)
 (global-set-key "\M-x" 'backward-word)
@@ -262,5 +264,5 @@
  ;; If there is more than one, they won't work right.
  )
 
-(require 'term+)
+;; (require 'term+)
 ;; (require 'xterm-256color)
