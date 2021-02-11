@@ -2,6 +2,7 @@
 (setq load-path(cons"~/.emacs.d/lisp" load-path))
 
 (set-language-environment 'Japanese)
+(setenv "LANG" "ja_JP.UTF-8")
 (set-language-environment  'utf-8)
 (prefer-coding-system 'utf-8)
 
@@ -44,6 +45,8 @@
 (global-set-key (kbd "C-q n") 'multi-term-next)
 (global-set-key (kbd "C-q p") 'multi-term-prev)
 
+(setq-default indent-tabs-mode nil)
+
 ;; Color
 (if window-system (progn
     (set-background-color "Black")
@@ -66,7 +69,7 @@
 
 ;; (load-theme 'underwater t)
 
-;; オートコンプリートの有効化
+;; ;; オートコンプリートの有効化
 (require 'company)
 (global-company-mode) ; 全バッファで有効にする
 (setq company-idle-delay 0) ; デフォルト0.5
@@ -152,22 +155,7 @@
                   'katakana-jisx0201
                   (cons "Ricty Diminished Discord" "iso10646-1"))
 
-;; (if window-system
-;;     (progn
-;;       (let* ((size 18)
-;;              (asciifont "Ricty Ascii") ; ASCII fonts
-;;              (jpfont "ヒラギノ角ゴ ProN") ; Japanese fonts
-;;              (h (* size 10))
-;;              (fontspec (font-spec :family asciifont))
-;;              (jp-fontspec (font-spec :family jpfont)))
-;;         (set-face-attribute 'default nil :family asciifont :height h)
-;;         (set-fontset-font nil 'japanese-jisx0213.2004-1 jp-fontspec)
-;;         (set-fontset-font nil 'japanese-jisx0213-2 jp-fontspec)
-;;         (set-fontset-font nil 'katakana-jisx0201 jp-fontspec)
-;;         (set-fontset-font nil '(#x0080 . #x024F) fontspec)
-;;         (set-fontset-font nil '(#x0370 . #x03FF) fontspec))))
-
-
+;; Cycle-buffer
 (autoload 'cycle-buffer "cycle-buffer" "Cycle forward." t)
 (autoload 'cycle-buffer-backward "cycle-buffer" "Cycle backward." t)
 (autoload 'cycle-buffer-permissive "cycle-buffer" "Cycle forward allowing *buffers*." t)
@@ -176,15 +164,9 @@
 (global-set-key "\M-p"        'cycle-buffer-backward)
 (global-set-key "\M-k"       'cycle-buffer)
 
+;; YAML-mode
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
-
-;; (autoload 'markdown-preview-mode "markdown-preview-mode.el" t)
-;; (custom-set-variables
-;;  '(package-selected-packages
-;;    '(flycheck vue-mode mmm-jinja2 mmm-mode markdown-mode+ markdown-preview-mode uuidgen web-server websocket)))
-;; (custom-set-faces
-;;  )
 (autoload 'markdown-preview-mode "markdown-preview-mode.el" t)
 (setq markdown-preview-stylesheets (list "github.css"))
 
@@ -264,7 +246,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(multi-term underwater-theme twilight-theme ubuntu-theme monokai-theme company vue-mode uuidgen smartparens mmm-jinja2 markdown-preview-mode markdown-mode+ flycheck)))
+   '(elpy smart-tabs-mode multi-term underwater-theme twilight-theme ubuntu-theme monokai-theme company vue-mode uuidgen smartparens mmm-jinja2 markdown-preview-mode markdown-mode+ flycheck)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -276,6 +258,7 @@
 (setq multi-term-program shell-file-name)
 (add-to-list 'term-unbind-key-list '"C-q")
 (add-to-list 'term-unbind-key-list '"C-x")
+
 
 ; shell の存在を確認
 (defun skt:shell ()
@@ -290,3 +273,6 @@
 (setq explicit-shell-file-name shell-file-name)
 
 (require 'xterm-color)
+
+(when (and (require 'python nil t) (require 'elpy nil t))
+   (elpy-enable))
