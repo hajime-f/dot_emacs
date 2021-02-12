@@ -37,6 +37,8 @@
 (global-set-key "\C-j\C-l" 'comment-region)
 (global-set-key "\C-j\C-r" 'uncomment-region)
 
+(global-set-key (kbd "C-q g") 'magit-status)
+
 (global-set-key (kbd "C-q t") '(lambda ()
                                 (interactive)
                                 (if (get-buffer "*terminal<1>*")
@@ -246,7 +248,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(elpy smart-tabs-mode multi-term underwater-theme twilight-theme ubuntu-theme monokai-theme company vue-mode uuidgen smartparens mmm-jinja2 markdown-preview-mode markdown-mode+ flycheck)))
+   '(magit elpy smart-tabs-mode multi-term underwater-theme twilight-theme ubuntu-theme monokai-theme company vue-mode uuidgen smartparens mmm-jinja2 markdown-preview-mode markdown-mode+ flycheck)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
