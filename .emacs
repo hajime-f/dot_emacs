@@ -144,7 +144,7 @@
                       :foreground "#808080"
                       :background "#0f0f0f")
   (set-face-attribute 'line-number-current-line nil
-                      :foreground "gold")))
+                      :foreground "gold"))
 
 ;; ターミナルで起動したときにメニューを表示しない
 (if (eq window-system 'x)
