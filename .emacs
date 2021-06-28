@@ -1,11 +1,17 @@
+;; コマンドキーを Ctrl キーにする
 (setq mac-command-modifier 'control)
+
+;; パスを通す
 (setq load-path(cons"~/.emacs.d/lisp" load-path))
 
+;; 言語の設定
 (set-language-environment 'Japanese)
 (setenv "LANG" "ja_JP.UTF-8")
 (set-language-environment  'utf-8)
+(set-default-coding-systems 'utf-8)
 (prefer-coding-system 'utf-8)
 
+;; パッケージ管理
 (package-initialize)
 (require 'package)
 (setq package-archives
@@ -13,15 +19,14 @@
         ("melpa" . "http://melpa.org/packages/")
         ("org" . "http://orgmode.org/elpa/")))
 
+;; キーバインディングの設定
 (global-set-key "\C-q" 'Control-X-prefix)
 (global-set-key "\C-j" 'mode-specific-command-prefix)
-
 (global-set-key "\C-q\C-o" 'save-buffer)
 (global-set-key "\C-q\C-j" 'save-buffers-kill-emacs)
 (global-set-key "\C-q\C-a" 'write-file)
 (global-set-key "\C-l" 'set-mark-command)
-(global-set-key "\C-t" 'kill-line)
-(global-set-key "\C-k" 'multi-term)
+(global-set-key "\C-k" 'kill-line)
 (global-set-key "\C-z" 'kill-region)
 (global-set-key "\C-u" 'forward-char)
 (global-set-key "\C-x" 'backward-char)
@@ -29,27 +34,24 @@
 (global-set-key "\C-q\C-u" 'find-file)
 (global-set-key "\C-r" 'isearch-backward)
 (global-set-key "\C-p" 'toggle-frame-maximized)
-
 (global-set-key "\M-u" 'forward-word)
 (global-set-key "\M-x" 'backward-word)
 (global-set-key "\M-q" 'execute-extended-command)
-
 (global-set-key "\C-j\C-l" 'comment-region)
 (global-set-key "\C-j\C-r" 'uncomment-region)
-
 (global-set-key (kbd "C-q g") 'magit-status)
+;; (global-set-key (kbd "C-q t") '(lambda ()
+;;                                 (interactive)
+;;                                 (if (get-buffer "*terminal<1>*")
+;;                                     (switch-to-buffer "*terminal<1>*")
+;;                                   (multi-term))))
+;; (global-set-key (kbd "C-q n") 'multi-term-next)
+;; (global-set-key (kbd "C-q p") 'multi-term-prev)
 
-(global-set-key (kbd "C-q t") '(lambda ()
-                                (interactive)
-                                (if (get-buffer "*terminal<1>*")
-                                    (switch-to-buffer "*terminal<1>*")
-                                  (multi-term))))
-(global-set-key (kbd "C-q n") 'multi-term-next)
-(global-set-key (kbd "C-q p") 'multi-term-prev)
-
+;; Tabキーを無効化する
 (setq-default indent-tabs-mode nil)
 
-;; Color
+;; ウィンドウの色の設定
 (if window-system (progn
     (set-background-color "Black")
     (set-foreground-color "LightGray")
@@ -71,34 +73,89 @@
 
 ;; (load-theme 'underwater t)
 
-;; ;; オートコンプリートの有効化
+;; オートコンプリートの有効化
 (require 'company)
 (global-company-mode) ; 全バッファで有効にする
 (setq company-idle-delay 0) ; デフォルト0.5
 (setq company-minimum-prefix-length 2) ; デフォルト4
 (setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る
-;; (define-key company-active-map (kbd "M-n") nil)
-;; (define-key company-active-map (kbd "M-p") nil)
-;; (define-key company-active-map (kbd "C-n") 'company-select-next)
-;; (define-key company-active-map (kbd "C-p") 'company-select-previous)
-;; (define-key company-active-map (kbd "C-h") nil)
+(define-key company-active-map (kbd "M-n") nil)
+(define-key company-active-map (kbd "M-p") nil)
+(define-key company-active-map (kbd "C-n") 'company-select-next)
+(define-key company-active-map (kbd "C-p") 'company-select-previous)
+(define-key company-active-map (kbd "C-h") nil)
 
 ;; フレームの設定
 (setq default-frame-alist
       (append (list
                ;; サイズ・位置
-               '(width . 120)  ; 横幅(文字数)
+               '(width . 170)  ; 横幅(文字数)
                '(height . 59) ; 高さ(行数)
                '(top . 80)    ; フレーム左上角 y 座標
-               '(left . 3000)   ; フレーム左上角 x 座標
+               '(left . 2500)   ; フレーム左上角 x 座標
                )
               default-frame-alist))
 
+;; elscreen（上部タブ）
+(require 'elscreen)
+(setq elscreen-prefix-key (kbd "C-v"))
+(elscreen-start)
+(global-set-key "\C-t" 'elscreen-create)
+(global-set-key "\C-w" 'elscreen-kill)
+;; (global-set-key (kbd "s-t") 'elscreen-create)
+(global-set-key (kbd "C-<down>") 'elscreen-next)
+(global-set-key (kbd "C-<up>") 'elscreen-previous)
+;; (global-set-key (kbd "s-d") 'elscreen-kill)
+(set-face-attribute 'elscreen-tab-background-face nil
+                    :background "grey10"
+                    :foreground "grey90")
+(set-face-attribute 'elscreen-tab-control-face nil
+                    :background "grey20"
+                    :foreground "grey90")
+(set-face-attribute 'elscreen-tab-current-screen-face nil
+                    :background "grey20"
+                    :foreground "grey90")
+(set-face-attribute 'elscreen-tab-other-screen-face nil
+                    :background "grey30"
+                    :foreground "grey60")
+;;; [X]を表示しない
+(setq elscreen-tab-display-kill-screen nil)
+;;; [<->]を表示しない
+(setq elscreen-tab-display-control nil)
+
+;; neotree（サイドバー）
+(require 'neotree)
+(global-set-key "\C-o" 'neotree-toggle)
+
+;; golden ratio
+(golden-ratio-mode 1)
+(add-to-list 'golden-ratio-exclude-buffer-names " *NeoTree*")
+
+;; スクロールは1行ごとに
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 5)))
+
+;; スクロールの加速をやめる
+(setq mouse-wheel-progressive-speed nil)
+
+;; 行番号の表示
+(progn
+  (global-display-line-numbers-mode)
+  (set-face-attribute 'line-number nil
+                      :foreground "#808080"
+                      :background "#0f0f0f")
+  (set-face-attribute 'line-number-current-line nil
+                      :foreground "gold")))
+
+;; ターミナルで起動したときにメニューを表示しない
+(if (eq window-system 'x)
+    (menu-bar-mode 1) (menu-bar-mode 0))
+(menu-bar-mode nil)
+
+;; scratchの初期メッセージ消去
+(setq initial-scratch-message "")
+
 ;; 起動時のメッセージを表示しない
 (setq inhibit-startup-message t)
-
-;; デフォルトの文字コードは utf-8
-(set-default-coding-systems 'utf-8)
 
 ;; ツールバーを消す
 (tool-bar-mode 0)
@@ -119,7 +176,7 @@
 ;; yes-or-no を y-or-n で応えるようにする．
 (fset 'yes-or-no-p 'y-or-n-p)
 
-;; タイトルバーにファイル名を表示する
+;; タイトルバーにファイル名をフルパスで表示する
 (setq frame-title-format (format "emacs@%s : %%f" (system-name)))
 
 ;; 時刻表示
@@ -127,6 +184,16 @@
 
 ;; C-hv とか ファイル名補完時のウィンドウを自動的にリサイズする。
 (temp-buffer-resize-mode t)
+
+;; bufferの最後でカーソルを動かそうとしても音をならなくする
+(defun next-line (arg)
+  (interactive "p")
+  (condition-case nil
+      (line-move arg)
+    (end-of-buffer)))
+
+;; エラー音をならなくする
+;;(setq ring-bell-function 'ignore)
 
 (defun compile-newer-file (file)
   ".elcがない、あるいは.elより新しい時にcompileする"
@@ -163,8 +230,8 @@
 (autoload 'cycle-buffer-permissive "cycle-buffer" "Cycle forward allowing *buffers*." t)
 (autoload 'cycle-buffer-backward-permissive "cycle-buffer" "Cycle backward allowing *buffers*." t)
 (autoload 'cycle-buffer-toggle-interesting "cycle-buffer" "Toggle if this buffer will be considered." t)
-(global-set-key "\M-p"        'cycle-buffer-backward)
-(global-set-key "\M-k"       'cycle-buffer)
+(global-set-key "\M-p" 'cycle-buffer-backward)
+(global-set-key "\M-k" 'cycle-buffer)
 
 ;; YAML-mode
 (require 'yaml-mode)
@@ -173,27 +240,43 @@
 (setq markdown-preview-stylesheets (list "github.css"))
 
 
+;;;; 以下は整理していない
+
 (add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
+(setq vue-mode-packages
+  '(vue-mode))
+
+(setq vue-mode-excluded-packages '())
+
+(defun vue-mode/init-vue-mode ()
+  "Initialize my package"
+  (use-package vue-mode))
 
 ;; vue-mode時、node_modulesのパスを登録
 (add-hook 'vue-mode-hook 'add-node-modules-path)
 
 ;; eslintによるflycheck
-(require 'flycheck)
-(flycheck-add-mode 'javascript-eslint 'vue-mode)
-(flycheck-add-mode 'javascript-eslint 'vue-html-mode)
-(flycheck-add-mode 'javascript-eslint 'css-mode)
+;; (require 'flycheck)
+;; (flycheck-add-mode 'javascript-eslint 'vue-mode)
+;; (flycheck-add-mode 'javascript-eslint 'vue-html-mode)
+;; (flycheck-add-mode 'javascript-eslint 'css-mode)
 
-;; tern-mode有効
+;; ;; tern-mode有効
 (add-hook 'vue-mode-hook 'tern-mode)
+
+(defun js-company-tern-hook ()
+  (when (locate-library "tern")
+    ;; .tern-port を作らない
+    (setq tern-command '("tern" "--no-port-file"))
+    (tern-mode t)))
 
 ;; vue-modeでflycheck有効にしたら、
 ;; 保存時にfixする
-(add-hook 'vue-mode-hook
-          (lambda ()
-            (add-hook 'flycheck-mode-hook
-                      (lambda()
-                        (add-hook 'after-save-hook #'eslint-fix)))))
+;; (add-hook 'vue-mode-hook
+;;           (lambda ()
+;;             (add-hook 'flycheck-mode-hook
+;;                       (lambda()
+;;                         (add-hook 'after-save-hook #'eslint-fix)))))
 
 (provide 'vue-config)
 
@@ -204,32 +287,45 @@
 ;; node_modulesのパスを通す
 (add-hook 'js-mode-hook 'add-node-modules-path)
 
-(provide 'js-config)
-(custom-set-variables
- '(package-selected-packages
-   '(magit elpy smart-tabs-mode multi-term underwater-theme twilight-theme ubuntu-theme monokai-theme company vue-mode uuidgen smartparens mmm-jinja2 markdown-preview-mode markdown-mode+ flycheck)))
-(custom-set-faces
- )
+;; (provide 'js-config)
+;; (custom-set-variables
+;;  '(package-selected-packages
+;;    '(magit elpy smart-tabs-mode multi-term underwater-theme twilight-theme ubuntu-theme monokai-theme company vue-mode uuidgen smartparens mmm-jinja2 markdown-preview-mode markdown-mode+ flycheck)))
+;; (custom-set-faces
+;;  )
 
-(require 'multi-term)
-(setq multi-term-program shell-file-name)
-(add-to-list 'term-unbind-key-list '"C-q")
-(add-to-list 'term-unbind-key-list '"C-x")
+;; (require 'multi-term)
+;; (setq multi-term-program shell-file-name)
+;; (add-to-list 'term-unbind-key-list '"C-q")
+;; (add-to-list 'term-unbind-key-list '"C-x")
 
 
-; shell の存在を確認
-(defun skt:shell ()
-  (or (executable-find "zsh")
-      (executable-find "bash")
-      (executable-find "cmdproxy")
-      (error "can't find 'shell' command in PATH!!")))
+;; ; shell の存在を確認
+;; (defun skt:shell ()
+;;   (or (executable-find "zsh")
+;;       (executable-find "bash")
+;;       (executable-find "cmdproxy")
+;;       (error "can't find 'shell' command in PATH!!")))
 
-;; Shell 名の設定
-(setq shell-file-name (skt:shell))
-(setenv "SHELL" shell-file-name)
-(setq explicit-shell-file-name shell-file-name)
+;; ;; Shell 名の設定
+;; (setq shell-file-name (skt:shell))
+;; (setenv "SHELL" shell-file-name)
+;; (setq explicit-shell-file-name shell-file-name)
 
-(require 'xterm-color)
+;; (require 'xterm-color)
 
 (when (and (require 'python nil t) (require 'elpy nil t))
    (elpy-enable))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(vue-mode uuidgen underwater-theme ubuntu-theme twilight-theme smartparens smart-tabs-mode python-mode multi-term monokai-theme mmm-jinja2 markdown-preview-mode markdown-mode+ magit flycheck elpy)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
