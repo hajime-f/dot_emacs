@@ -26,7 +26,7 @@
 (global-set-key "\C-q\C-j" 'save-buffers-kill-emacs)
 (global-set-key "\C-q\C-a" 'write-file)
 (global-set-key "\C-l" 'set-mark-command)
-(global-set-key "\C-k" 'kill-line)
+(global-set-key "\C-t" 'kill-line)
 (global-set-key "\C-z" 'kill-region)
 (global-set-key "\C-u" 'forward-char)
 (global-set-key "\C-x" 'backward-char)
@@ -40,16 +40,6 @@
 (global-set-key "\C-j\C-l" 'comment-region)
 (global-set-key "\C-j\C-r" 'uncomment-region)
 (global-set-key (kbd "C-q g") 'magit-status)
-;; (global-set-key (kbd "C-q t") '(lambda ()
-;;                                 (interactive)
-;;                                 (if (get-buffer "*terminal<1>*")
-;;                                     (switch-to-buffer "*terminal<1>*")
-;;                                   (multi-term))))
-;; (global-set-key (kbd "C-q n") 'multi-term-next)
-;; (global-set-key (kbd "C-q p") 'multi-term-prev)
-
-;; Tabキーを無効化する
-(setq-default indent-tabs-mode nil)
 
 ;; ウィンドウの色の設定
 (if window-system (progn
@@ -59,31 +49,15 @@
     (set-frame-parameter nil 'alpha 85) ;透明度
     ))
 
+;; (load-theme 'underwater t)
+;; (load-theme 'monokai t)
+
 ;; ¥の代わりにバックスラッシュを入力する
 (define-key global-map [?¥] [?\\])
 
 ;; 対応する括弧をハイライトする
 (show-paren-mode t)
 (setq show-paren-style 'mixed)
-
-;; 括弧自動補完
-(require 'smartparens)
-(smartparens-global-mode t)
-(setq-default sp-highlight-pair-overlay nil)  ;ハイライト機能削除
-
-;; (load-theme 'underwater t)
-
-;; オートコンプリートの有効化
-(require 'company)
-(global-company-mode) ; 全バッファで有効にする
-(setq company-idle-delay 0) ; デフォルト0.5
-(setq company-minimum-prefix-length 2) ; デフォルト4
-(setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る
-(define-key company-active-map (kbd "M-n") nil)
-(define-key company-active-map (kbd "M-p") nil)
-(define-key company-active-map (kbd "C-n") 'company-select-next)
-(define-key company-active-map (kbd "C-p") 'company-select-previous)
-(define-key company-active-map (kbd "C-h") nil)
 
 ;; フレームの設定
 (setq default-frame-alist
@@ -96,40 +70,32 @@
                )
               default-frame-alist))
 
-;; elscreen（上部タブ）
-(require 'elscreen)
-(setq elscreen-prefix-key (kbd "C-v"))
-(elscreen-start)
-(global-set-key "\C-t" 'elscreen-create)
-(global-set-key "\C-w" 'elscreen-kill)
-;; (global-set-key (kbd "s-t") 'elscreen-create)
-(global-set-key (kbd "C-<down>") 'elscreen-next)
-(global-set-key (kbd "C-<up>") 'elscreen-previous)
-;; (global-set-key (kbd "s-d") 'elscreen-kill)
-(set-face-attribute 'elscreen-tab-background-face nil
-                    :background "grey10"
-                    :foreground "grey90")
-(set-face-attribute 'elscreen-tab-control-face nil
-                    :background "grey20"
-                    :foreground "grey90")
-(set-face-attribute 'elscreen-tab-current-screen-face nil
-                    :background "grey20"
-                    :foreground "grey90")
-(set-face-attribute 'elscreen-tab-other-screen-face nil
-                    :background "grey30"
-                    :foreground "grey60")
-;;; [X]を表示しない
-(setq elscreen-tab-display-kill-screen nil)
-;;; [<->]を表示しない
-(setq elscreen-tab-display-control nil)
-
-;; neotree（サイドバー）
-(require 'neotree)
-(global-set-key "\C-o" 'neotree-toggle)
-
-;; golden ratio
-(golden-ratio-mode 1)
-(add-to-list 'golden-ratio-exclude-buffer-names " *NeoTree*")
+;; ;; elscreen（上部タブ）
+;; (require 'elscreen)
+;; (setq elscreen-prefix-key (kbd "C-v"))
+;; (elscreen-start)
+;; (global-set-key "\C-t" 'elscreen-create)
+;; (global-set-key "\C-w" 'elscreen-kill)
+;; ;; (global-set-key (kbd "s-t") 'elscreen-create)
+;; (global-set-key (kbd "C-<down>") 'elscreen-next)
+;; (global-set-key (kbd "C-<up>") 'elscreen-previous)
+;; ;; (global-set-key (kbd "s-d") 'elscreen-kill)
+;; (set-face-attribute 'elscreen-tab-background-face nil
+;;                     :background "grey10"
+;;                     :foreground "grey90")
+;; (set-face-attribute 'elscreen-tab-control-face nil
+;;                     :background "grey20"
+;;                     :foreground "grey90")
+;; (set-face-attribute 'elscreen-tab-current-screen-face nil
+;;                     :background "grey20"
+;;                     :foreground "grey90")
+;; (set-face-attribute 'elscreen-tab-other-screen-face nil
+;;                     :background "grey30"
+;;                     :foreground "grey60")
+;; ;;; [X]を表示しない
+;; (setq elscreen-tab-display-kill-screen nil)
+;; ;;; [<->]を表示しない
+;; (setq elscreen-tab-display-control nil)
 
 ;; スクロールは1行ごとに
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 5)))
@@ -153,6 +119,9 @@
 
 ;; scratchの初期メッセージ消去
 (setq initial-scratch-message "")
+
+;; Tabキーを無効化する
+(setq-default indent-tabs-mode nil)
 
 ;; 起動時のメッセージを表示しない
 (setq inhibit-startup-message t)
@@ -233,11 +202,48 @@
 (global-set-key "\M-p" 'cycle-buffer-backward)
 (global-set-key "\M-k" 'cycle-buffer)
 
+;; 括弧自動補完
+(require 'smartparens)
+(smartparens-global-mode t)
+;; (setq-default sp-highlight-pair-overlay nil)  ;ハイライト機能削除
+
+;; オートコンプリートの有効化
+(require 'company)
+(global-company-mode) ; 全バッファで有効にする
+(setq company-idle-delay 0) ; デフォルト0.5
+(setq company-minimum-prefix-length 2) ; デフォルト4
+(setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る
+;; (define-key company-active-map (kbd "M-n") nil)
+;; (define-key company-active-map (kbd "M-p") nil)
+;; (define-key company-active-map (kbd "C-n") 'company-select-next)
+;; (define-key company-active-map (kbd "C-p") 'company-select-previous)
+;; (define-key company-active-map (kbd "C-h") nil)
+
+;; neotree（サイドバー）
+(require 'neotree)
+(global-set-key "\C-o" 'neotree-toggle)
+
+;; golden ratio
+(golden-ratio-mode 1)
+(add-to-list 'golden-ratio-exclude-buffer-names " *NeoTree*")
+
 ;; YAML-mode
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
 (autoload 'markdown-preview-mode "markdown-preview-mode.el" t)
 (setq markdown-preview-stylesheets (list "github.css"))
+
+;; PDF出力
+(setq my-pdfout-command-format "nkf -e | e2ps -a4 -p -nh | ps2pdf - %s")
+(defun my-pdfout-region (begin end)
+    (interactive "r")
+    (shell-command-on-region begin end (format my-pdfout-command-format (read-from-minibuffer "File name:"))))
+(defun my-pdfout-buffer ()
+    (interactive)
+    (my-pdfout-region (point-min) (point-max)))
+
+
+
 
 
 ;;;; 以下は整理していない
