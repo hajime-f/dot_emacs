@@ -65,37 +65,10 @@
                ;; サイズ・位置
                '(width . 170)  ; 横幅(文字数)
                '(height . 59) ; 高さ(行数)
-               '(top . 80)    ; フレーム左上角 y 座標
+               '(top . 90)    ; フレーム左上角 y 座標
                '(left . 2500)   ; フレーム左上角 x 座標
                )
               default-frame-alist))
-
-;; ;; elscreen（上部タブ）
-;; (require 'elscreen)
-;; (setq elscreen-prefix-key (kbd "C-v"))
-;; (elscreen-start)
-;; (global-set-key "\C-t" 'elscreen-create)
-;; (global-set-key "\C-w" 'elscreen-kill)
-;; ;; (global-set-key (kbd "s-t") 'elscreen-create)
-;; (global-set-key (kbd "C-<down>") 'elscreen-next)
-;; (global-set-key (kbd "C-<up>") 'elscreen-previous)
-;; ;; (global-set-key (kbd "s-d") 'elscreen-kill)
-;; (set-face-attribute 'elscreen-tab-background-face nil
-;;                     :background "grey10"
-;;                     :foreground "grey90")
-;; (set-face-attribute 'elscreen-tab-control-face nil
-;;                     :background "grey20"
-;;                     :foreground "grey90")
-;; (set-face-attribute 'elscreen-tab-current-screen-face nil
-;;                     :background "grey20"
-;;                     :foreground "grey90")
-;; (set-face-attribute 'elscreen-tab-other-screen-face nil
-;;                     :background "grey30"
-;;                     :foreground "grey60")
-;; ;;; [X]を表示しない
-;; (setq elscreen-tab-display-kill-screen nil)
-;; ;;; [<->]を表示しない
-;; (setq elscreen-tab-display-control nil)
 
 ;; スクロールは1行ごとに
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 5)))
@@ -223,6 +196,33 @@
 (require 'neotree)
 (global-set-key "\C-o" 'neotree-toggle)
 
+;; elscreen（上部タブ）
+(require 'elscreen)
+(setq elscreen-prefix-key (kbd "C-v"))
+(elscreen-start)
+(global-set-key "\C-qt" 'elscreen-create)
+(global-set-key "\C-w" 'elscreen-kill)
+;; (global-set-key (kbd "s-t") 'elscreen-create)
+(global-set-key (kbd "C-<down>") 'elscreen-next)
+(global-set-key (kbd "C-<up>") 'elscreen-previous)
+;; (global-set-key (kbd "s-d") 'elscreen-kill)
+(set-face-attribute 'elscreen-tab-background-face nil
+                    :background "grey10"
+                    :foreground "grey90")
+(set-face-attribute 'elscreen-tab-control-face nil
+                    :background "grey20"
+                    :foreground "grey90")
+(set-face-attribute 'elscreen-tab-current-screen-face nil
+                    :background "grey20"
+                    :foreground "grey90")
+(set-face-attribute 'elscreen-tab-other-screen-face nil
+                    :background "grey30"
+                    :foreground "grey60")
+;;; [X]を表示しない
+(setq elscreen-tab-display-kill-screen nil)
+;;; [<->]を表示しない
+(setq elscreen-tab-display-control nil)
+
 ;; golden ratio
 (golden-ratio-mode 1)
 (add-to-list 'golden-ratio-exclude-buffer-names " *NeoTree*")
@@ -242,13 +242,7 @@
     (interactive)
     (my-pdfout-region (point-min) (point-max)))
 
-
-
-
-
-;;;; 以下は整理していない
-
-(add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
+;; Vue-mode
 (setq vue-mode-packages
   '(vue-mode))
 
@@ -258,8 +252,29 @@
   "Initialize my package"
   (use-package vue-mode))
 
-;; vue-mode時、node_modulesのパスを登録
-(add-hook 'vue-mode-hook 'add-node-modules-path)
+(add-hook 'mmm-mode-hook
+          (lambda ()
+            (set-face-background 'mmm-default-submode-face "#000000")))
+
+
+
+
+
+
+;;;; 以下は整理していない
+
+;; ;; (add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
+;; (setq vue-mode-packages
+;;   '(vue-mode))
+
+;; (setq vue-mode-excluded-packages '())
+
+;; (defun vue-mode/init-vue-mode ()
+;;   "Initialize my package"
+;;   (use-package vue-mode))
+
+;; ;; vue-mode時、node_modulesのパスを登録
+;; (add-hook 'vue-mode-hook 'add-node-modules-path)
 
 ;; eslintによるflycheck
 ;; (require 'flycheck)
@@ -268,13 +283,13 @@
 ;; (flycheck-add-mode 'javascript-eslint 'css-mode)
 
 ;; ;; tern-mode有効
-(add-hook 'vue-mode-hook 'tern-mode)
+;; (add-hook 'vue-mode-hook 'tern-mode)
 
-(defun js-company-tern-hook ()
-  (when (locate-library "tern")
-    ;; .tern-port を作らない
-    (setq tern-command '("tern" "--no-port-file"))
-    (tern-mode t)))
+;; (defun js-company-tern-hook ()
+;;   (when (locate-library "tern")
+;;     ;; .tern-port を作らない
+;;     (setq tern-command '("tern" "--no-port-file"))
+;;     (tern-mode t)))
 
 ;; vue-modeでflycheck有効にしたら、
 ;; 保存時にfixする
@@ -284,14 +299,14 @@
 ;;                       (lambda()
 ;;                         (add-hook 'after-save-hook #'eslint-fix)))))
 
-(provide 'vue-config)
+;; (provide 'vue-config)
 
 
-;; 拡張子jsのファイルを開いたときjs-modeに
-(add-to-list 'auto-mode-alist '("\\.js$" . js-mode))
+;; ;; 拡張子jsのファイルを開いたときjs-modeに
+;; (add-to-list 'auto-mode-alist '("\\.js$" . js-mode))
 
-;; node_modulesのパスを通す
-(add-hook 'js-mode-hook 'add-node-modules-path)
+;; ;; node_modulesのパスを通す
+;; (add-hook 'js-mode-hook 'add-node-modules-path)
 
 ;; (provide 'js-config)
 ;; (custom-set-variables
@@ -318,20 +333,35 @@
 ;; (setenv "SHELL" shell-file-name)
 ;; (setq explicit-shell-file-name shell-file-name)
 
-;; (require 'xterm-color)
+(require 'xterm-color)
 
-(when (and (require 'python nil t) (require 'elpy nil t))
-   (elpy-enable))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(vue-mode uuidgen underwater-theme ubuntu-theme twilight-theme smartparens smart-tabs-mode python-mode multi-term monokai-theme mmm-jinja2 markdown-preview-mode markdown-mode+ magit flycheck elpy)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+;; (when (and (require 'python nil t) (require 'elpy nil t))
+;;    (elpy-enable))
+;; (custom-set-variables
+;;  ;; custom-set-variables was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  '(package-selected-packages
+;;    '(vue-mode uuidgen underwater-theme ubuntu-theme twilight-theme smartparens smart-tabs-mode python-mode multi-term monokai-theme mmm-jinja2 markdown-preview-mode markdown-mode+ magit flycheck elpy)))
+;; (custom-set-faces
+;;  ;; custom-set-faces was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  )
+
+
+;; (custom-set-variables
+;;  ;; custom-set-variables was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  '(package-selected-packages
+;;    '(vterm vue-mode uuidgen underwater-theme ubuntu-theme twilight-theme tern smartparens smart-tabs-mode python-mode neotree multi-term monokai-theme mmm-jinja2 markdown-preview-mode markdown-mode+ magit golden-ratio flycheck elscreen elpy)))
+;; (custom-set-faces
+;;  ;; custom-set-faces was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  )
