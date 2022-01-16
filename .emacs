@@ -66,7 +66,7 @@
                '(width . 170)  ; 横幅(文字数)
                '(height . 59) ; 高さ(行数)
                '(top . 90)    ; フレーム左上角 y 座標
-               '(left . 2500)   ; フレーム左上角 x 座標
+               '(left . 2000)   ; フレーム左上角 x 座標
                )
               default-frame-alist))
 
@@ -191,6 +191,7 @@
 ;; (define-key company-active-map (kbd "C-n") 'company-select-next)
 ;; (define-key company-active-map (kbd "C-p") 'company-select-previous)
 ;; (define-key company-active-map (kbd "C-h") nil)
+(setq company-require-match 'never)
 
 ;; neotree（サイドバー）
 (require 'neotree)
@@ -333,7 +334,7 @@
 ;; (setenv "SHELL" shell-file-name)
 ;; (setq explicit-shell-file-name shell-file-name)
 
-(require 'xterm-color)
+;; (require 'xterm-color)
 
 ;; (when (and (require 'python nil t) (require 'elpy nil t))
 ;;    (elpy-enable))
@@ -365,3 +366,16 @@
 ;;  ;; Your init file should contain only one such instance.
 ;;  ;; If there is more than one, they won't work right.
 ;;  )
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(vue-mode uuidgen underwater-theme ubuntu-theme twilight-theme smartparens smart-tabs-mode python-mode neotree multi-term monokai-theme markdown-preview-mode markdown-mode+ magit golden-ratio flycheck elscreen)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
