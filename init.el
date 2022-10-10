@@ -217,17 +217,17 @@
 (require 'auto-complete-config)
 (global-auto-complete-mode 0.5)
 
-;; (require 'company)
-;; (global-company-mode) ; 全バッファで有効にする
-;; (setq company-idle-delay 0) ; デフォルト0.5
-;; (setq company-minimum-prefix-length 2) ; デフォルト4
-;; (setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る
-;; ;; (define-key company-active-map (kbd "M-n") nil)
-;; ;; (define-key company-active-map (kbd "M-p") nil)
-;; ;; (define-key company-active-map (kbd "C-n") 'company-select-next)
-;; ;; (define-key company-active-map (kbd "C-p") 'company-select-previous)
-;; ;; (define-key company-active-map (kbd "C-h") nil)
-;; (setq company-require-match 'never)
+(require 'company)
+(global-company-mode) ; 全バッファで有効にする
+(setq company-idle-delay 0) ; デフォルト0.5
+(setq company-minimum-prefix-length 2) ; デフォルト4
+(setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る
+;; (define-key company-active-map (kbd "M-n") nil)
+;; (define-key company-active-map (kbd "M-p") nil)
+;; (define-key company-active-map (kbd "C-n") 'company-select-next)
+;; (define-key company-active-map (kbd "C-p") 'company-select-previous)
+;; (define-key company-active-map (kbd "C-h") nil)
+(setq company-require-match 'never)
 
 
 ;; migemo
@@ -307,7 +307,80 @@
 
 
 
+(add-to-list 'exec-path (expand-file-name "/usr/local/bin"))
+(add-to-list 'exec-path (expand-file-name "~/.cargo/bin"))
 
+(require 'rust-mode)
+(setq rust-format-on-save t)
+
+(require 'cargo)
+(require 'lsp-mode)
+(setq lsp-rust-server 'rust-analyzer)
+
+(require 'flycheck)
+(require 'flycheck-rust)
+(require 'racer)
+
+(require 'lsp-ui)
+
+;; (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
+;; (add-hook 'rust-mode-hook  #'company-mode)
+;; (add-hook 'rust-mode-hook  #'racer-mode)
+;; (add-hook 'racer-mode-hook #'eldoc-mode)
+;; (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
+;; (add-hook 'rust-mode-hook
+;;           '(lambda ()
+;; 	     (setq racer-cmd (concat (getenv "HOME") "/.emacs.d/elpa/racer-20210307.243"))
+;; 	     (setq racer-rust-src-path (concat (getenv "HOME") "/.emacs.d/elpa/racer-20210307.243"))
+;;              (local-set-key (kbd "TAB") #'company-indent-or-complete-common)
+;; 	     (electric-pair-mode 1)))
+;; (provide 'init-rust)
+
+(use-package rust-mode
+  :ensure t
+  :custom rust-format-on-save t)
+
+(use-package cargo
+  :ensure t
+  :hook (rust-mode . cargo-minor-mode))
+
+(use-package lsp-mode
+  :ensure
+  :commands lsp
+  :custom
+  ;; what to use when checking on-save. "check" is default, I prefer clippy
+  (lsp-rust-analyzer-cargo-watch-command "clippy")
+  (lsp-eldoc-render-all t)
+  (lsp-idle-delay 0.6)
+  ;; enable / disable the hints as you prefer:
+  (lsp-rust-analyzer-server-display-inlay-hints t)
+  (lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial")
+  (lsp-rust-analyzer-display-chaining-hints t)
+  (lsp-rust-analyzer-display-lifetime-elision-hints-use-parameter-names nil)
+  (lsp-rust-analyzer-display-closure-return-type-hints t)
+  (lsp-rust-analyzer-display-parameter-hints nil)
+  (lsp-rust-analyzer-display-reborrow-hints nil)
+  :config
+  (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+
+(use-package lsp-ui
+  :ensure
+  :commands lsp-ui-mode
+  :custom
+  (lsp-ui-peek-always-show t)
+  (lsp-ui-sideline-show-hover t)
+  (lsp-ui-doc-enable nil))
+
+;; (use-package lsp-mode
+;;   :ensure t
+;;   :init (yas-global-mode)
+;;   :hook (rust-mode . lsp)
+;;   :bind ("C-c h" . lsp-describe-thing-at-point)
+;;   ;; :custom (lsp-rust-server 'rls)
+;;   :custom (lsp-rust-server 'rust-analyzer)
+;;   )
+;; (use-package lsp-ui
+;;   :ensure t)
 
 
 ;;;; 以下は整理していない
@@ -435,7 +508,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(doom-themes all-the-icons doom-modeline migemo hiwin go-eldoc go-mode go-autocomplete uuidgen underwater-theme ubuntu-theme twilight-theme smartparens smart-tabs-mode python-mode neotree multi-term monokai-theme markdown-preview-mode markdown-mode+ magit golden-ratio flycheck elscreen)))
+   '(racer quickrun flycheck-rust lsp-mode rust-mode doom-themes all-the-icons doom-modeline migemo hiwin go-eldoc go-mode go-autocomplete uuidgen underwater-theme ubuntu-theme twilight-theme smartparens smart-tabs-mode python-mode neotree multi-term monokai-theme markdown-preview-mode markdown-mode+ magit golden-ratio flycheck elscreen)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
